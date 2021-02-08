@@ -1,5 +1,5 @@
 let handleSearch = () =>{
-    console.log(document.getElementById("foodName").value);
+    // console.log(document.getElementById("foodName").value);
     let foodName = document.getElementById("foodName").value
     let url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${foodName}`    
     fetch(url)
@@ -7,14 +7,25 @@ let handleSearch = () =>{
     .then(mealList => showMealList(mealList))
 }
 let showMealList = (mealList) =>{
-    let ul = document.createElement('ul');
-    let li = document.createElement('li');
     mealList.meals.map((mealItem)=>{
-        console.log(mealItem.strMeal,mealItem.idMeal, mealItem.strMealThumb);
-        li.innerHTML=mealItem.strMeal
-        ul.appendChild(li)
+        let div = document.createElement('div');
+        div.className='col-md-4 foodItem'
+        // console.log(mealItem.strMeal,mealItem.idMeal, mealItem.strMealThumb);
+        div.innerHTML=`
+        <img id="foodThumb" src="${mealItem.strMealThumb}">
+        <h2 id="foodName">${mealItem.strMeal}</h2>
+        `
+        div.addEventListener('click',function(){showIngredients(mealItem)})
+        document.getElementById('mealList').appendChild(div)
     })
-    document.getElementById('mealList').appendChild(ul)
+}
+let showIngredients = mealItem =>{
+    for (let key in mealItem) {
+        if (key.substring(0, 13) === "strIngredient"
+          && mealItem[key] !== ""){
+          console.log(mealItem[key]);
+        }
+    }   
 }
 document.getElementById("searchButton").addEventListener('click',function(){
     handleSearch()
